@@ -1,0 +1,63 @@
+<h1 class="mb-4">New Organization</h1>
+
+<div class="row">
+  <div class="col-md-6">
+    <% if @organization.errors.any? %>
+      <div class="alert alert-danger">
+        <h4>The following errors prevented the organization from being saved:</h4>
+        <ul class="mb-0">
+          <% @organization.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <form action="/organizations" method="post">
+      <div class="mb-3">
+        <label for="organization_name" class="form-label">Name</label>
+        <input type="text"
+               id="organization_name"
+               name="organization[name]"
+               class="form-control <%= 'is-invalid' if @organization.errors[:name].any? %>"
+               value="<%= @organization.name %>"
+               required>
+        <% if @organization.errors[:name].any? %>
+          <div class="invalid-feedback">
+            <%= @organization.errors[:name].join(', ') %>
+          </div>
+        <% end %>
+      </div>
+      <div class="mb-3">
+        <label for="organization_creator_name" class="form-label">Creator Name</label>
+        <input type="text"
+               id="organization_creator_name"
+               name="organization[creator_name]"
+               class="form-control <%= 'is-invalid' if @organization.errors[:creator_name].any? %>"
+               value="<%= @organization.creator_name %>"
+               required>
+        <% if @organization.errors[:creator_name].any? %>
+          <div class="invalid-feedback">
+            <%= @organization.errors[:creator_name].join(', ') %>
+          </div>
+        <% end %>
+      </div>
+      <div class="mb-3">
+        <label for="organization_creator_email" class="form-label">Creator Email</label>
+        <input type="email"
+               id="organization_creator_email"
+               name="organization[creator_email]"
+               class="form-control <%= 'is-invalid' if @organization.errors[:creator_email].any? %>"
+               value="<%= @organization.creator_email %>"
+               required>
+        <% if @organization.errors[:creator_email].any? %>
+          <div class="invalid-feedback">
+            <%= @organization.errors[:creator_email].join(', ') %>
+          </div>
+        <% end %>
+      </div>
+      <button type="submit" class="btn btn-primary">Create</button>
+      <a href="/organizations" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="row mb-4">
+  <div class="col">
+    <h1>Organizations</h1>
+  </div>
+  <div class="col text-end">
+    <a href="/organizations/new" class="btn btn-primary">New Organization</a>
+  </div>
+</div>
+
+<div class="list-group">
+  <% @organizations.each do |org| %>
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <%= org.name %>
+        <% if org.tremendous_oauth_access_token.present? %>
+          <span class="badge bg-success ms-2">OAuth connected</span>
+        <% elsif org.tremendous_connected_organization_member_id.present? %>
+          <span class="badge bg-info ms-2">Set up on Tremendous</span>
+        <% end %>
+      </div>
+      <div class="btn-group gap-1">
+        <a href="/organizations/<%= org.id %>" class="btn btn-sm btn-outline-primary">Show</a>
+        <form action="/organizations/<%= org.id %>" method="post" class="d-inline">
+          <input type="hidden" name="_method" value="delete">
+          <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?')">Delete</button>
+        </form>
+      </div>
+    </div>
+  <% end %>
+</div>

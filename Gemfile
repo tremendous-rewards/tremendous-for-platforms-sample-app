@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+gem 'dotenv', '~> 3.1.7'
+gem 'httparty', '~> 0.22.0'
+gem 'oauth2', '~> 2.0.9'
+gem 'sinatra', '~> 4.1.1'
+gem 'sqlite3', '~> 2.5.0'
+gem 'sinatra-activerecord', '~> 2.0.28'
+gem 'sinatra-flash', '~> 0.3.0'
+gem 'rake', '~> 13.2.1'
+gem 'rackup', '~> 2.2.1'
+gem 'puma', '~> 6.5.0'

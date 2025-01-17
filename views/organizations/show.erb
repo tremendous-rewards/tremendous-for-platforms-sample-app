@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="card-body">
+    <h1 class="card-title mb-4"><%= @organization.name %></h1>
+
+    <div class="row mb-4">
+      <div class="col-md-6 border-end">
+        <h3 class="mb-4">Basic Information</h3>
+        <dl class="row">
+          <dt class="col-sm-4">Creator Name</dt>
+          <dd class="col-sm-8"><%= @organization.creator_name %></dd>
+
+          <dt class="col-sm-4">Creator Email</dt>
+          <dd class="col-sm-8"><%= @organization.creator_email %></dd>
+
+          <dt class="col-sm-4">Created At</dt>
+          <dd class="col-sm-8"><%= @organization.created_at&.strftime('%B %d, %Y %H:%M') %></dd>
+        </dl>
+      </div>
+
+      <div class="col-md-6 ps-md-5">
+        <h3 class="mb-4">Tremendous Integration</h3>
+        <dl class="row">
+          <dt class="col-sm-4">Connected Org ID</dt>
+          <dd class="col-sm-8"><%= @organization.tremendous_connected_organization_id || '-' %></dd>
+
+          <dt class="col-sm-4">Member ID</dt>
+          <dd class="col-sm-8"><%= @organization.tremendous_connected_organization_member_id || '-' %></dd>
+
+          <dt class="col-sm-4">Organization ID</dt>
+          <dd class="col-sm-8"><%= @organization.tremendous_organization_id || '-' %></dd>
+
+          <dt class="col-sm-4">OAuth Status</dt>
+          <dd class="col-sm-8">
+            <% if @organization.tremendous_oauth_access_token.present? %>
+              <span class="badge bg-success">Connected</span>
+            <% else %>
+              <span class="badge bg-secondary">Not Connected</span>
+            <% end %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div>
+      <% if @organization.tremendous_connected_organization_member_id.blank? %>
+        <form action="/organizations/<%= @organization.id %>/tremendous_setup" method="post" class="d-inline">
+          <button type="submit" class="btn btn-primary">Set up on Tremendous</button>
+        </form>
+      <% else %>
+        <a href="/organizations/<%= @organization.id %>/tremendous_flow" class="btn btn-primary" data-tremendous-flow>Open Tremendous flow for <%= @organization.creator_name %></a>
+      <% end %>
+
+      <% if @organization.tremendous_oauth_access_token.present? %>
+        <a href="/organizations/<%= @organization.id %>?with_api_call=true" class="btn btn-success">Make Tremendous OAuth API call</a>
+      <% end %>
+      <a href="/organizations" class="btn btn-outline-primary">Back to List</a>
+    </div>
+
+    <% if @api_response.present? %>
+    <div class="mt-4">
+      <h4>Tremendous API Response</h4>
+      <div class="bg-light p-3 rounded">
+        <pre class="mb-0 overflow-auto" style="max-height: 400px;"><code><%= JSON.pretty_generate(@api_response) %></code></pre>
+      </div>
+    </div>
+  <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tremendousFlowLink = document.querySelector('[data-tremendous-flow]');
+
+    if (tremendousFlowLink) {
+      tremendousFlowLink.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        fetch(this.href)
+          .then(response => response.json())
+          .then(data => {
+            window.location.href = data.url;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to initiate Tremendous flow. Please try again.');
+          });
+      });
+    }
+  });
+</script>
