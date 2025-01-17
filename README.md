@@ -48,6 +48,35 @@ A minimal Sinatra application for managing organizations and the integration wit
    ngrok http 9292
    ```
 
+   Use that public URL when configuring the callback and webhook endpoints on Tremendous:
+   - `return_uri` when [registering the OAuth application](https://developers.tremendous.com/docs/oauth-20#step-1-register-a-developer-app): `https://<your-ngrok-domain>/callback`
+   - `url` when [configuring the webhook](https://developers.tremendous.com/reference/create-webhook): `https://<your-ngrok-domain>/webhooks`
+
+## Controllers
+
+### OrganizationsController
+Located in `controllers/organizations_controller.rb`
+- Handles all organization-related routes
+- Core functionalities:
+  - CRUD operations for organizations
+  - Setting up an organization on Tremendous
+  - Starting the platform clients flow on Tremendous
+- Key endpoints:
+  - `GET /organizations` - List all organizations
+  - `GET /organizations/new` - New organization form
+  - `POST /organizations` - Create organization
+  - `GET /organizations/:id` - Show organization details
+  - `POST /organizations/:id/tremendous_setup` - Initialize Tremendous setup
+  - `GET /organizations/:id/tremendous_flow` - Start Tremendous flow
+
+### WebhooksController
+Located in `controllers/webhooks_controller.rb`
+- Handles incoming webhooks from Tremendous
+- Processes two main webhook events:
+  - `CONNECTED_ORGANIZATIONS.REGISTERED`
+  - `CONNECTED_ORGANIZATIONS.OAUTH.GRANTED`
+- Includes webhook signature validation for security
+
 ## Services
 
 ### TremendousApiService
@@ -57,6 +86,7 @@ Located in `services/tremendous_api_service.rb`
   - Creating connected organizations
   - Creating connected organization members
   - Creating member sessions
+- Uses HTTParty for API requests
 
 ### TremendousOauthApiService
 Located in `services/tremendous_oauth_service.rb`
@@ -64,4 +94,5 @@ Located in `services/tremendous_oauth_service.rb`
 - Core functionalities:
   - Fetching access tokens
   - Refreshing tokens
-  - Making authenticated API calls with OAuth
+  - Making authenticated API calls with OAuth tokens
+- Uses the `oauth2` gem for OAuth operations
